@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Devdut Sharma</title>
+<meta name="description" content="Projects by Devdut Sharma, CSE AI/ML student at Manipal Institute of Technology.">
+<script>
+  // Applied before first paint to avoid a flash of the wrong theme
+  (function(){
+    try{
+      var pref = localStorage.getItem('theme') || 'system';
+      var effective = pref === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : pref;
+      document.documentElement.setAttribute('data-theme', effective);
+    }catch(e){}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --base:#E6EBF2;
+    --base-light:#FFFFFF;
+    --base-dark:#A9B4C4;
+    --text-primary:#262B36;
+    --text-muted:#6B7280;
+    --accent-1:#6C5CE7;
+    --accent-2:#00C2CB;
+    --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    --radius-lg: 28px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+    --shadow-raised: 8px 8px 16px var(--base-dark), -8px -8px 16px var(--base-light);
+    --shadow-raised-sm: 5px 5px 10px var(--base-dark), -5px -5px 10px var(--base-light);
+    --shadow-pressed: inset 5px 5px 10px var(--base-dark), inset -5px -5px 10px var(--base-light);
+    --shadow-flat: 3px 3px 6px var(--base-dark), -3px -3px 6px var(--base-light);
+    --ff-display: 'Space Grotesk', sans-serif;
+    --ff-body: 'Plus Jakarta Sans', sans-serif;
+    --ff-mono: 'JetBrains Mono', monospace;
+  }
+  :root[data-theme="dark"]{
+    --base:#20232C;
+    --base-light:#2C303C;
+    --base-dark:#14161C;
+    --text-primary:#E9ECF3;
+    --text-muted:#9198AC;
+    --accent-1:#8C7CFF;
+    --accent-2:#2BDDE6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--base);color:var(--text-primary);font-family:var(--ff-body);line-height:1.6;transition:background-color .4s ease, color .4s ease;}
+  #bgCanvas{position:fixed;inset:0;z-index:-1;pointer-events:none;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  :focus-visible{outline:2px solid var(--accent-1);outline-offset:3px;border-radius:6px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+
+  /* ===== Navbar (shared) ===== */
+  header{position:fixed;top:20px;left:0;right:0;z-index:500;display:flex;justify-content:center;}
+  .navbar{
+    width:min(920px, calc(100% - 48px));
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--base);border-radius:100px;padding:10px 12px 10px 20px;
+    box-shadow:var(--shadow-raised-sm);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--ff-display);font-weight:600;font-size:15px;}
+  .brand-mark{width:38px;height:38px;border-radius:50%;background:var(--base);box-shadow:var(--shadow-raised-sm);display:flex;align-items:center;justify-content:center;font-family:var(--ff-mono);font-size:13px;color:var(--accent-1);}
+  .nav-links{display:flex;align-items:center;gap:4px;background:var(--base);border-radius:100px;padding:4px;box-shadow:var(--shadow-pressed);}
+  .nav-links a{display:inline-block;padding:9px 16px;border-radius:100px;font-size:13.5px;font-weight:500;color:var(--text-muted);transition:box-shadow .25s ease,color .25s ease,background .25s ease;}
+  .nav-links a:hover{color:var(--text-primary);}
+  .nav-links a.active{color:var(--accent-1);background:var(--base);box-shadow:var(--shadow-raised-sm);}
+  .nav-cta{width:42px;height:42px;border-radius:50%;background:var(--base);box-shadow:var(--shadow-raised-sm);border:none;display:none;align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);}
+  .nav-cta svg{width:18px;height:18px;}
+  .theme-toggle{display:flex;align-items:center;gap:2px;background:var(--base);border-radius:100px;padding:4px;box-shadow:var(--shadow-pressed);margin-left:10px;flex-shrink:0;}
+  .theme-btn{width:32px;height:32px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text-muted);cursor:pointer;transition:box-shadow .2s ease,color .2s ease,background .2s ease;}
+  .theme-btn svg{width:14px;height:14px;}
+  .theme-btn:hover{color:var(--text-primary);}
+  .theme-btn.active{background:var(--base);box-shadow:var(--shadow-raised-sm);color:var(--accent-1);}
+
+  .auth-area{display:flex;align-items:center;margin-left:10px;flex-shrink:0;}
+  .btn-login{
+    font-family:var(--ff-mono);font-size:12.5px;font-weight:600;padding:9px 18px;border-radius:100px;
+    background:var(--base);box-shadow:var(--shadow-raised-sm);color:var(--accent-1);
+    transition:box-shadow .2s ease;white-space:nowrap;
+  }
+  .btn-login:hover{box-shadow:var(--shadow-pressed);}
+  .user-chip{display:flex;align-items:center;gap:8px;background:var(--base);border-radius:100px;padding:4px 6px 4px 4px;box-shadow:var(--shadow-pressed);}
+  .user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-grad);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--ff-display);font-size:12px;font-weight:600;flex-shrink:0;}
+  .user-name{font-size:12.5px;font-weight:600;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .logout-btn{width:26px;height:26px;border-radius:50%;border:none;background:var(--base);box-shadow:var(--shadow-raised-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);flex-shrink:0;}
+  .logout-btn:hover{color:var(--accent-1);}
+  .logout-btn svg{width:13px;height:13px;}
+  @media (max-width:560px){ .user-name{display:none;} }
+  @media (max-width:760px){
+    .nav-links{position:fixed;top:88px;right:24px;left:24px;flex-direction:column;align-items:stretch;padding:10px;box-shadow:var(--shadow-raised);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .25s ease,transform .25s ease;}
+    .nav-links.open{opacity:1;transform:translateY(0);pointer-events:auto;}
+    .nav-links a{text-align:center;padding:12px 16px;}
+    .nav-cta{display:flex;}
+  }
+
+  /* ===== Page head ===== */
+  .page-hero{padding:160px 0 60px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-1);background:var(--base);padding:8px 16px;border-radius:100px;box-shadow:var(--shadow-pressed);margin-bottom:22px;}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 8px var(--accent-2);}
+  h1{font-family:var(--ff-display);font-weight:700;font-size:clamp(2.2rem,4.6vw,3.4rem);letter-spacing:-.02em;margin-bottom:16px;}
+  h1 span{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .page-desc{color:var(--text-muted);max-width:560px;font-size:15.5px;}
+
+  /* ===== Filters ===== */
+  .filter-row{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0 44px;}
+  .filter-chip{
+    font-family:var(--ff-mono);font-size:12.5px;padding:10px 18px;border-radius:100px;
+    background:var(--base);box-shadow:var(--shadow-raised-sm);cursor:pointer;border:none;color:var(--text-muted);
+    transition:box-shadow .2s ease,color .2s ease;
+  }
+  .filter-chip:hover{color:var(--text-primary);}
+  .filter-chip.active{color:var(--accent-1);box-shadow:var(--shadow-pressed);}
+
+  /* ===== Project grid ===== */
+  .projects-grid{
+    display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:26px;
+    padding-bottom:100px;
+  }
+  .project-card{
+    background:var(--base);border-radius:var(--radius-md);box-shadow:var(--shadow-raised-sm);
+    padding:28px;display:flex;flex-direction:column;
+    opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease, box-shadow .25s ease;
+  }
+  .project-card.show{opacity:1;transform:translateY(0);}
+  .project-card:hover{box-shadow:var(--shadow-raised);}
+  .project-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;}
+  .project-cat{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2);}
+  .featured-badge{
+    font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    background:var(--base);box-shadow:var(--shadow-pressed);padding:5px 10px;border-radius:8px;color:var(--accent-1);flex-shrink:0;
+  }
+  .project-card h3{font-family:var(--ff-display);font-size:1.15rem;margin-bottom:10px;}
+  .project-card p{color:var(--text-muted);font-size:14px;flex-grow:1;margin-bottom:18px;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+  .tag{font-family:var(--ff-mono);font-size:11px;padding:6px 11px;border-radius:8px;background:var(--base);box-shadow:var(--shadow-pressed);color:var(--text-primary);}
+  .link-row{display:flex;gap:12px;}
+  .link-btn{
+    flex:1;text-align:center;font-size:13px;font-weight:600;padding:11px;border-radius:12px;
+    background:var(--base);box-shadow:var(--shadow-raised-sm);transition:box-shadow .2s ease,color .2s ease;
+  }
+  .link-btn:hover{box-shadow:var(--shadow-pressed);color:var(--accent-1);}
+  .link-btn.disabled{opacity:.4;pointer-events:none;}
+
+  .empty-state{
+    text-align:center;padding:70px 30px;background:var(--base);border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-pressed);color:var(--text-muted);font-size:14.5px;
+  }
+
+  /* ===== How to add (repo-style instructions) ===== */
+  .howto{
+    background:var(--base);border-radius:var(--radius-lg);box-shadow:var(--shadow-raised);
+    padding:40px;margin-bottom:100px;
+  }
+  .howto h2{font-family:var(--ff-display);font-size:1.3rem;margin-bottom:12px;}
+  .howto p{color:var(--text-muted);font-size:14.5px;margin-bottom:18px;max-width:640px;}
+  .code-block{
+    background:var(--base);box-shadow:var(--shadow-pressed);border-radius:var(--radius-sm);
+    padding:20px 22px;font-family:var(--ff-mono);font-size:12.5px;color:var(--text-primary);
+    overflow-x:auto;white-space:pre;line-height:1.7;
+  }
+
+  footer{text-align:center;padding:36px 0 48px;font-family:var(--ff-mono);font-size:12px;color:var(--text-muted);}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+<header>
+  <nav class="navbar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">DS</span>
+      Devdut Sharma
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#education">Education</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button class="theme-btn" data-theme-choice="light" aria-label="Light theme" title="Light">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="theme-btn" data-theme-choice="dark" aria-label="Dark theme" title="Dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <button class="theme-btn" data-theme-choice="system" aria-label="System theme" title="System">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+      </button>
+    </div>
+    <div class="auth-area" id="authArea">
+      <a href="login.html" class="btn-login">Login</a>
+    </div>
+    <button class="nav-cta" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Selected Work</span>
+    <h1>Projects I've <span>built &amp; trained</span></h1>
+    <p class="page-desc">A running collection of machine learning models, tools, and web apps. New projects get added by editing <code>projects.json</code> and pushing to GitHub — no database required.</p>
+
+    <div class="filter-row" id="filterRow">
+      <!-- filter chips injected by JS -->
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+      <!-- project cards injected by JS -->
+    </div>
+
+    <div class="howto">
+      <h2>How to add a new project</h2>
+      <p>Open <strong>projects.json</strong> in this folder and add a new object to the array, then commit &amp; push. This page picks it up automatically — no code changes needed.</p>
+      <div class="code-block">{
+  "title": "Your Project Name",
+  "category": "Machine Learning",
+  "description": "One or two sentences about what it does.",
+  "tags": ["Python", "PyTorch"],
+  "github": "https://github.com/your-username/repo-name",
+  "demo": "https://your-live-demo-link.com",
+  "featured": false
+}</div>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="year"></span> Devdut Sharma — built with soft shadows &amp; neural nets.</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSy39eeFdJONcPSFJ76BJaciS1l6ESvTE",
+    authDomain: "zynexalpha.firebaseapp.com",
+    projectId: "zynexalpha",
+    storageBucket: "zynexalpha.firebasestorage.app",
+    messagingSenderId: "780065160785",
+    appId: "1:780065160785:web:b168affe481f55d7154270",
+    measurementId: "G-H70X75N1RF"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const authArea = document.getElementById('authArea');
+
+  function initials(name){
+    return name ? name.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase() : '?';
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user){
+      const name = user.displayName || user.email || 'Account';
+      authArea.innerHTML = `
+        <div class="user-chip">
+          <div class="user-avatar">${initials(user.displayName || user.email)}</div>
+          <span class="user-name">${name}</span>
+          <button class="logout-btn" id="logoutBtn" aria-label="Log out" title="Log out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>`;
+      document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+    } else {
+      authArea.innerHTML = `<a href="login.html" class="btn-login">Login</a>`;
+    }
+  });
+</script>
+
+<script>
+  // ===== Theme system =====
+  const themeButtons = document.querySelectorAll('.theme-btn');
+  let currentPref = localStorage.getItem('theme') || 'system';
+
+  function getSystemPref(){
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function updateToggleUI(pref){
+    themeButtons.forEach(b => b.classList.toggle('active', b.dataset.themeChoice === pref));
+  }
+  function applyTheme(pref, save = true){
+    const effective = pref === 'system' ? getSystemPref() : pref;
+    document.documentElement.setAttribute('data-theme', effective);
+    if (save) localStorage.setItem('theme', pref);
+    updateToggleUI(pref);
+  }
+
+  applyTheme(currentPref, false);
+  themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentPref = btn.dataset.themeChoice;
+      applyTheme(currentPref);
+    });
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (currentPref === 'system') applyTheme('system', false);
+  });
+
+  // ===== Ambient particle field (black dots in light theme, white in dark) =====
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let w, h, particles;
+
+    function resize(){
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    function initParticles(){
+      const count = Math.min(70, Math.floor((w * h) / 26000));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
+        r: Math.random() * 1.4 + 1
+      }));
+    }
+    function dotColor(){
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? '255,255,255' : '10,10,14';
+    }
+    function frame(){
+      ctx.clearRect(0, 0, w, h);
+      const rgb = dotColor();
+      particles.forEach(p => {
+        if (!reduceMotion){
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb},0.42)`;
+        ctx.fill();
+      });
+      for (let i = 0; i < particles.length; i++){
+        for (let j = i + 1; j < particles.length; j++){
+          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110){
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(${rgb},${0.12 * (1 - dist / 110)})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+      if (!reduceMotion) requestAnimationFrame(frame);
+    }
+
+    resize();
+    initParticles();
+    frame();
+    window.addEventListener('resize', () => { resize(); initParticles(); if (reduceMotion) frame(); });
+  })();
+
+  // ===== Mobile nav toggle =====
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ===== Load projects from projects.json =====
+  const grid = document.getElementById('projectsGrid');
+  const filterRow = document.getElementById('filterRow');
+  let allProjects = [];
+  let activeFilter = 'All';
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+  }
+
+  function renderChips(categories){
+    filterRow.innerHTML = '';
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip' + (cat === activeFilter ? ' active' : '');
+      btn.textContent = cat;
+      btn.addEventListener('click', () => {
+        activeFilter = cat;
+        renderChips(categories);
+        renderProjects();
+      });
+      filterRow.appendChild(btn);
+    });
+  }
+
+  function renderProjects(){
+    const filtered = activeFilter === 'All'
+      ? allProjects
+      : allProjects.filter(p => p.category === activeFilter);
+
+    if (filtered.length === 0){
+      grid.innerHTML = '<div class="empty-state">No projects in this category yet — add one to projects.json.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(p => `
+      <article class="project-card">
+        <div class="project-top">
+          <span class="project-cat">${escapeHtml(p.category || 'Project')}</span>
+          ${p.featured ? '<span class="featured-badge">Featured</span>' : ''}
+        </div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <p>${escapeHtml(p.description)}</p>
+        <div class="tag-row">
+          ${(p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+        </div>
+        <div class="link-row">
+          <a class="link-btn ${p.github ? '' : 'disabled'}" href="${p.github || '#'}" target="_blank" rel="noopener">Code</a>
+          <a class="link-btn ${p.demo ? '' : 'disabled'}" href="${p.demo || '#'}" target="_blank" rel="noopener">Live Demo</a>
+        </div>
+      </article>
+    `).join('');
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.project-card').forEach((el, i) => {
+        setTimeout(() => el.classList.add('show'), i * 70);
+      });
+    });
+  }
+
+  fetch('projects.json')
+    .then(res => {
+      if (!res.ok) throw new Error('projects.json not found');
+      return res.json();
+    })
+    .then(data => {
+      allProjects = data;
+      const categories = ['All', ...new Set(data.map(p => p.category).filter(Boolean))];
+      renderChips(categories);
+      renderProjects();
+    })
+    .catch(() => {
+      grid.innerHTML = `<div class="empty-state">
+        Couldn't load projects.json. If you're opening this file directly (file://) some browsers block local fetches —
+        run it through a local server (e.g. VS Code's "Live Server") or view it on GitHub Pages once deployed.
+      </div>`;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Handwritten Digit Classifier",
+    "category": "Machine Learning",
+    "description": "A convolutional neural network trained on MNIST to recognize handwritten digits, with a live drawing canvas for real-time predictions.",
+    "tags": ["Python", "TensorFlow", "CNN", "Flask"],
+    "github": "https://github.com/your-username/digit-classifier",
+    "demo": "",
+    "featured": true
+  },
+  {
+    "title": "Sentiment Analysis Dashboard",
+    "category": "NLP",
+    "description": "An NLP pipeline that scrapes tweets on a topic and visualizes sentiment trends over time using a fine-tuned transformer model.",
+    "tags": ["Python", "PyTorch", "Hugging Face", "React"],
+    "github": "https://github.com/your-username/sentiment-dashboard",
+    "demo": "",
+    "featured": false
+  },
+  {
+    "title": "Campus Navigator",
+    "category": "Web App",
+    "description": "A pathfinding web app that helps students find the shortest route between buildings on campus using Dijkstra's algorithm.",
+    "tags": ["JavaScript", "Node.js", "Algorithms"],
+    "github": "https://github.com/your-username/campus-navigator",
+    "demo": "",
+    "featured": false
+  }
+]

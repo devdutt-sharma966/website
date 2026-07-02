@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Devdut Sharma</title>
+<style>
+:root{
+  --bg:#0B0B0D;
+  --surface:#151517;
+  --fg:#F5F5F0;
+  --muted:#8A8A8E;
+  --accent:#FF5E5B;
+  --ok:#39FF88;
+  --shadow: 6px 6px 0px var(--fg);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Courier New', monospace;}
+body{background:var(--bg);color:var(--fg);min-height:100vh;padding:0 0 80px;}
+a{color:inherit;}
+
+/* ===== Gate screens ===== */
+.gate{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;text-align:center;padding:30px;
+}
+.gate p{color:var(--muted);max-width:380px;}
+.gate .btn{margin-top:10px;}
+
+/* ===== Top bar ===== */
+header{
+  border-bottom:2px solid var(--fg);
+  padding:22px 30px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.title-block h1{font-size:20px;letter-spacing:.06em;}
+.title-block span{font-size:12px;color:var(--muted);}
+.top-actions{display:flex;align-items:center;gap:12px;}
+.pill{
+  font-size:11px;padding:7px 14px;border:2px solid var(--fg);border-radius:100px;color:var(--muted);
+}
+.btn{
+  font-family:'Courier New', monospace;
+  font-weight:bold;
+  font-size:13px;
+  padding:10px 18px;
+  border:2px solid var(--fg);
+  background:var(--bg);
+  color:var(--fg);
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.btn:hover{box-shadow:4px 4px 0px var(--fg);transform:translate(-2px,-2px);}
+.btn-accent{background:var(--accent);border-color:var(--fg);color:#0B0B0D;}
+.btn-ok{background:var(--ok);border-color:var(--fg);color:#0B0B0D;}
+.btn-ghost{background:transparent;}
+.btn-danger{background:var(--bg);color:var(--accent);border-color:var(--accent);}
+.btn-danger:hover{box-shadow:4px 4px 0px var(--accent);}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+main{max-width:960px;margin:0 auto;padding:40px 24px;}
+section{margin-bottom:60px;}
+.section-title{
+  font-size:16px;letter-spacing:.08em;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--fg);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+
+.message{font-size:12px;padding:10px 14px;border:2px solid var(--fg);margin-bottom:16px;display:none;}
+.message.error{background:var(--accent);color:#0B0B0D;display:block;border-color:var(--fg);}
+.message.success{background:var(--ok);color:#0B0B0D;display:block;border-color:var(--fg);}
+
+/* ===== Project list ===== */
+.project-row{
+  border:2px solid var(--fg);
+  padding:16px 18px;
+  margin-bottom:12px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
+  background:var(--surface);
+}
+.project-row .info{flex:1;min-width:200px;}
+.project-row h3{font-size:15px;margin-bottom:6px;}
+.project-row .cat{font-size:10.5px;color:var(--accent);letter-spacing:.08em;margin-bottom:8px;display:block;}
+.project-row p{font-size:12.5px;color:var(--muted);margin-bottom:8px;}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;}
+.tag-row span{font-size:10px;border:1px solid var(--muted);color:var(--muted);padding:3px 8px;}
+.row-actions{display:flex;gap:8px;flex-shrink:0;}
+.row-actions .btn{padding:8px 12px;font-size:11px;}
+.empty-note{color:var(--muted);font-size:13px;padding:20px 0;}
+
+/* ===== Form ===== */
+.form-card{
+  border:2px solid var(--fg);
+  background:var(--surface);
+  padding:26px;
+  margin-bottom:20px;
+  display:none;
+}
+.form-card.open{display:block;}
+.form-row{margin-bottom:16px;}
+.form-row label{display:block;font-size:11px;letter-spacing:.06em;color:var(--muted);margin-bottom:6px;}
+.form-row input[type=text], .form-row input[type=url], .form-row textarea{
+  width:100%;padding:11px 13px;border:2px solid var(--fg);background:var(--bg);color:var(--fg);font-size:14px;outline:none;
+}
+.form-row textarea{resize:vertical;min-height:70px;}
+.form-row input:focus, .form-row textarea:focus{box-shadow:3px 3px 0px var(--fg);}
+.form-check{display:flex;align-items:center;gap:8px;}
+.form-check input{width:16px;height:16px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-actions{display:flex;gap:10px;margin-top:6px;}
+@media (max-width:600px){.form-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ===== Auth gate ===== -->
+<div class="gate" id="gateChecking">
+  <p>Checking access…</p>
+</div>
+
+<div class="gate" id="gateDenied" style="display:none;">
+  <h1 style="font-size:22px;">ACCESS DENIED</h1>
+  <p>This page is restricted to the site owner. Sign in with the authorized account to continue.</p>
+  <a class="btn btn-accent" href="login.html?redirect=admin.html">Go to Login</a>
+  <a class="btn btn-ghost" href="index.html">Back to site</a>
+</div>
+
+<!-- ===== Admin content ===== -->
+<div id="adminApp" style="display:none;">
+
+  <header>
+    <div class="title-block">
+      <h1>ADMIN PANEL</h1>
+      <span id="adminEmail"></span>
+    </div>
+    <div class="top-actions">
+      <a class="pill" href="index.html">← Site</a>
+      <button class="btn btn-ghost" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== Projects ===== -->
+    <section>
+      <div class="section-title">
+        <span>Projects</span>
+        <button class="btn btn-accent" id="newProjectBtn">+ Add Project</button>
+      </div>
+
+      <div class="message" id="projectMessage"></div>
+
+      <div class="form-card" id="projectForm">
+        <input type="hidden" id="projectDocId">
+        <div class="form-grid">
+          <div class="form-row">
+            <label>TITLE</label>
+            <input type="text" id="pTitle" placeholder="Project name">
+          </div>
+          <div class="form-row">
+            <label>CATEGORY</label>
+            <input type="text" id="pCategory" placeholder="e.g. Machine Learning">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>DESCRIPTION</label>
+          <textarea id="pDescription" placeholder="One or two sentences about the project"></textarea>
+        </div>
+        <div class="form-row">
+          <label>TAGS (comma separated)</label>
+          <input type="text" id="pTags" placeholder="Python, PyTorch, CNN">
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <label>GITHUB URL</label>
+            <input type="url" id="pGithub" placeholder="https://github.com/...">
+          </div>
+          <div class="form-row">
+            <label>LIVE DEMO URL</label>
+            <input type="url" id="pDemo" placeholder="https://...">
+          </div>
+        </div>
+        <div class="form-row form-check">
+          <input type="checkbox" id="pFeatured">
+          <label for="pFeatured" style="margin:0;">Mark as featured</label>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ok" id="saveProjectBtn">Save Project</button>
+          <button class="btn btn-ghost" id="cancelProjectBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div id="projectsList"></div>
+    </section>
+
+    <!-- ===== Education ===== -->
+    <section>
+      <div class="section-title"><span>Education</span></div>
+      <div class="message" id="eduMessage"></div>
+      <div class="form-card open">
+        <div class="form-row">
+          <label>DEGREE / TITLE</label>
+          <input type="text" id="eTitle" placeholder="B.Tech, Computer Science & Engineering — AI & ML">
+        </div>
+        <div class="form-row">
+          <label>META LINE</label>
+          <input type="text" id="eMeta" placeholder="MANIPAL INSTITUTE OF TECHNOLOGY · CURRENT">
+        </div>
+        <div class="form-row">
+          <label>DESCRIPTION</label>
+          <textarea id="eDescription" placeholder="Coursework, focus areas, etc."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ok" id="saveEduBtn">Save Education</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSy39eeFdJONcPSFJ76BJaciS1l6ESvTE",
+    authDomain: "zynexalpha.firebaseapp.com",
+    projectId: "zynexalpha",
+    storageBucket: "zynexalpha.firebasestorage.app",
+    messagingSenderId: "780065160785",
+    appId: "1:780065160785:web:b168affe481f55d7154270",
+    measurementId: "G-H70X75N1RF"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const ADMIN_EMAIL = 'devdutts178@gmail.com';
+
+  const gateChecking = document.getElementById('gateChecking');
+  const gateDenied = document.getElementById('gateDenied');
+  const adminApp = document.getElementById('adminApp');
+
+  auth.onAuthStateChanged(user => {
+    if (user && user.email === ADMIN_EMAIL){
+      gateChecking.style.display = 'none';
+      gateDenied.style.display = 'none';
+      adminApp.style.display = 'block';
+      document.getElementById('adminEmail').textContent = user.email;
+      initProjects();
+      initEducation();
+    } else {
+      gateChecking.style.display = 'none';
+      adminApp.style.display = 'none';
+      gateDenied.style.display = 'flex';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut().then(() => window.location.href = 'index.html'));
+
+  function flash(elId, text, type){
+    const el = document.getElementById(elId);
+    el.textContent = text;
+    el.className = 'message ' + type;
+    setTimeout(() => { el.className = 'message'; el.textContent=''; }, 4000);
+  }
+
+  /* ================= PROJECTS ================= */
+  const projectForm = document.getElementById('projectForm');
+  const projectsList = document.getElementById('projectsList');
+
+  function resetProjectForm(){
+    document.getElementById('projectDocId').value = '';
+    document.getElementById('pTitle').value = '';
+    document.getElementById('pCategory').value = '';
+    document.getElementById('pDescription').value = '';
+    document.getElementById('pTags').value = '';
+    document.getElementById('pGithub').value = '';
+    document.getElementById('pDemo').value = '';
+    document.getElementById('pFeatured').checked = false;
+  }
+
+  document.getElementById('newProjectBtn').addEventListener('click', () => {
+    resetProjectForm();
+    projectForm.classList.add('open');
+    projectForm.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+  document.getElementById('cancelProjectBtn').addEventListener('click', () => {
+    projectForm.classList.remove('open');
+  });
+
+  document.getElementById('saveProjectBtn').addEventListener('click', () => {
+    const title = document.getElementById('pTitle').value.trim();
+    const category = document.getElementById('pCategory').value.trim();
+    const description = document.getElementById('pDescription').value.trim();
+    const tags = document.getElementById('pTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    const github = document.getElementById('pGithub').value.trim();
+    const demo = document.getElementById('pDemo').value.trim();
+    const featured = document.getElementById('pFeatured').checked;
+    const docId = document.getElementById('projectDocId').value;
+
+    if (!title || !description){
+      flash('projectMessage', 'Title and description are required.', 'error');
+      return;
+    }
+
+    const data = { title, category, description, tags, github, demo, featured };
+
+    const saveBtn = document.getElementById('saveProjectBtn');
+    saveBtn.disabled = true;
+
+    const promise = docId
+      ? db.collection('projects').doc(docId).update(data)
+      : db.collection('projects').add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+    promise
+      .then(() => {
+        flash('projectMessage', docId ? 'Project updated.' : 'Project added.', 'success');
+        projectForm.classList.remove('open');
+        resetProjectForm();
+      })
+      .catch(err => flash('projectMessage', err.message, 'error'))
+      .finally(() => { saveBtn.disabled = false; });
+  });
+
+  function editProject(doc){
+    const d = doc.data();
+    document.getElementById('projectDocId').value = doc.id;
+    document.getElementById('pTitle').value = d.title || '';
+    document.getElementById('pCategory').value = d.category || '';
+    document.getElementById('pDescription').value = d.description || '';
+    document.getElementById('pTags').value = (d.tags || []).join(', ');
+    document.getElementById('pGithub').value = d.github || '';
+    document.getElementById('pDemo').value = d.demo || '';
+    document.getElementById('pFeatured').checked = !!d.featured;
+    projectForm.classList.add('open');
+    projectForm.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  function deleteProject(id, title){
+    if (!confirm(`Delete "${title}"? This can't be undone.`)) return;
+    db.collection('projects').doc(id).delete()
+      .then(() => flash('projectMessage', 'Project deleted.', 'success'))
+      .catch(err => flash('projectMessage', err.message, 'error'));
+  }
+
+  function initProjects(){
+    db.collection('projects').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+      if (snapshot.empty){
+        projectsList.innerHTML = '<div class="empty-note">No projects yet. Add your first one above.</div>';
+        return;
+      }
+      projectsList.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = document.createElement('div');
+        row.className = 'project-row';
+        row.innerHTML = `
+          <div class="info">
+            <span class="cat">${(d.category || 'Project')}${d.featured ? ' · FEATURED' : ''}</span>
+            <h3>${d.title}</h3>
+            <p>${d.description || ''}</p>
+            <div class="tag-row">${(d.tags || []).map(t => `<span>${t}</span>`).join('')}</div>
+          </div>
+          <div class="row-actions">
+            <button class="btn" data-action="edit">Edit</button>
+            <button class="btn btn-danger" data-action="delete">Delete</button>
+          </div>`;
+        row.querySelector('[data-action="edit"]').addEventListener('click', () => editProject(doc));
+        row.querySelector('[data-action="delete"]').addEventListener('click', () => deleteProject(doc.id, d.title));
+        projectsList.appendChild(row);
+      });
+    }, err => {
+      projectsList.innerHTML = `<div class="empty-note">Couldn't load projects: ${err.message}</div>`;
+    });
+  }
+
+  /* ================= EDUCATION ================= */
+  const EDU_DOC = 'siteContent/education';
+
+  function initEducation(){
+    db.doc(EDU_DOC).get().then(snap => {
+      if (snap.exists){
+        const d = snap.data();
+        document.getElementById('eTitle').value = d.title || '';
+        document.getElementById('eMeta').value = d.meta || '';
+        document.getElementById('eDescription').value = d.description || '';
+      } else {
+        document.getElementById('eTitle').value = 'B.Tech, Computer Science & Engineering — AI & ML';
+        document.getElementById('eMeta').value = 'MANIPAL INSTITUTE OF TECHNOLOGY · CURRENT';
+        document.getElementById('eDescription').value = 'Coursework spans data structures & algorithms, machine learning, deep learning, and applied statistics, alongside project-based work in computer vision and NLP.';
+      }
+    });
+  }
+
+  document.getElementById('saveEduBtn').addEventListener('click', () => {
+    const title = document.getElementById('eTitle').value.trim();
+    const meta = document.getElementById('eMeta').value.trim();
+    const description = document.getElementById('eDescription').value.trim();
+    if (!title){
+      flash('eduMessage', 'Title is required.', 'error');
+      return;
+    }
+    db.doc(EDU_DOC).set({ title, meta, description })
+      .then(() => flash('eduMessage', 'Education updated.', 'success'))
+      .catch(err => flash('eduMessage', err.message, 'error'));
+  });
+</script>
+</body>
+</html>
