@@ -1,342 +1,661 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile & Achievements — Devdut Sharma</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --base: #E6EBF2;
-    --base-light: #FFFFFF;
-    --base-dark: #A9B4C4;
-    --text-primary: #262B36;
-    --text-muted: #6B7280;
-    --accent-1: #6C5CE7;
-    --accent-2: #00C2CB;
-    --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-    --radius-lg: 28px;
-    --radius-md: 18px;
-    --shadow-raised: 8px 8px 16px var(--base-dark), -8px -8px 16px var(--base-light);
-    --shadow-pressed: inset 5px 5px 10px var(--base-dark), inset -5px -5px 10px var(--base-light);
-    --ff-display: 'Space Grotesk', sans-serif;
-    --ff-body: 'Plus Jakarta Sans', sans-serif;
-    --ff-mono: 'JetBrains Mono', monospace;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile & Achievements — Devdut Sharma</title>
   
-  /* Fallback dark theme */
-  @media (prefers-color-scheme: dark) {
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* =========================================
+       CSS VARIABLES & THEMING
+       ========================================= */
     :root {
-      --base:#20232C; --base-light:#2C303C; --base-dark:#14161C;
-      --text-primary:#E9ECF3; --text-muted:#9198AC;
-      --accent-1:#8C7CFF; --accent-2:#2BDDE6;
+      --base: #E6EBF2;
+      --base-light: #FFFFFF;
+      --base-dark: #A9B4C4;
+      --text-primary: #262B36;
+      --text-muted: #6B7280;
+      --accent-1: #6C5CE7;
+      --accent-2: #00C2CB;
+      --accent-grad: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --shadow-raised: 8px 8px 16px var(--base-dark), -8px -8px 16px var(--base-light);
+      --shadow-pressed: inset 5px 5px 10px var(--base-dark), inset -5px -5px 10px var(--base-light);
+      --ff-display: 'Space Grotesk', sans-serif;
+      --ff-body: 'Plus Jakarta Sans', sans-serif;
+      --ff-mono: 'JetBrains Mono', monospace;
     }
-  }
+    
+    /* Fallback dark theme for system preferences */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --base: #20232C;
+        --base-light: #2C303C; 
+        --base-dark: #14161C;
+        --text-primary: #E9ECF3; 
+        --text-muted: #9198AC;
+        --accent-1: #8C7CFF; 
+        --accent-2: #2BDDE6;
+      }
+    }
 
-  /* Core Layout */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--base); color: var(--text-primary); font-family: var(--ff-body);
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    overflow-x: hidden; padding: 100px 20px 40px;
-  }
+    /* =========================================
+       GLOBAL RESET & BASE LAYOUT
+       ========================================= */
+    * { 
+      margin: 0;
+      padding: 0; 
+      box-sizing: border-box; 
+    }
 
-  /* Interactive Background */
-  #bgCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    body {
+      background: var(--base); 
+      color: var(--text-primary); 
+      font-family: var(--ff-body);
+      min-height: 100vh;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      overflow-x: hidden; 
+      padding: 100px 20px 40px;
+    }
 
-  /* Navbar Override */
-  header { position: fixed; top: 20px; left: 0; right: 0; z-index: 500; display: flex; justify-content: center; }
-  .navbar { display: flex; align-items: center; background: var(--base); border-radius: 100px; padding: 10px 20px; box-shadow: var(--shadow-raised); gap: 20px; }
-  .navbar a { text-decoration: none; font-family: var(--ff-mono); font-size: 13px; font-weight: 600; color: var(--text-muted); transition: color 0.3s ease; }
-  .navbar a:hover { color: var(--accent-1); }
+    /* Interactive Canvas Background */
+    #bgCanvas { 
+      position: fixed; 
+      inset: 0; 
+      z-index: -1; 
+      pointer-events: none;
+    }
 
-  /* Main Wrapper */
-  .profile-wrapper {
-    width: 100%; max-width: 900px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;
-    animation: fadeUp 0.8s ease forwards; opacity: 0; transform: translateY(20px);
-  }
-  @media (max-width: 800px) { .profile-wrapper { grid-template-columns: 1fr; } }
+    /* =========================================
+       NAVIGATION
+       ========================================= */
+    header { 
+      position: fixed; 
+      top: 20px; 
+      left: 0; 
+      right: 0; 
+      z-index: 500;
+      display: flex; 
+      justify-content: center; 
+    }
 
-  /* Card Styles */
-  .card {
-    background: var(--base); border-radius: var(--radius-lg); box-shadow: var(--shadow-raised); padding: 40px;
-  }
+    .navbar { 
+      display: flex; 
+      align-items: center; 
+      background: var(--base); 
+      border-radius: 100px; 
+      padding: 10px 20px;
+      box-shadow: var(--shadow-raised); 
+      gap: 20px; 
+    }
 
-  /* Left Side: Profile Details */
-  .profile-card { text-align: center; display: flex; flex-direction: column; align-items: center; }
-  .avatar-container {
-    width: 100px; height: 100px; border-radius: 50%; background: var(--base); box-shadow: var(--shadow-raised);
-    display: flex; align-items: center; justify-content: center; margin-bottom: 24px; position: relative; animation: float 4s ease-in-out infinite;
-  }
-  .avatar-container::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--accent-grad); z-index: 1; }
-  .avatar-text { position: relative; z-index: 2; font-family: var(--ff-display); font-weight: 700; font-size: 28px; color: #fff; }
-  .username-display { font-family: var(--ff-display); font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-  .email-display { font-family: var(--ff-mono); font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
-  
-  .meta-tag {
-    display: inline-block; padding: 6px 14px; border-radius: 20px; background: var(--base);
-    box-shadow: var(--shadow-pressed); font-family: var(--ff-mono); font-size: 11px; font-weight: 600;
-    color: var(--accent-1); margin-bottom: 30px; letter-spacing: 0.05em; text-transform: uppercase;
-  }
+    .navbar a { 
+      text-decoration: none; 
+      font-family: var(--ff-mono); 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--text-muted);
+      transition: color 0.3s ease; 
+    }
 
-  /* Form Elements */
-  .input-group { width: 100%; margin-bottom: 24px; text-align: left; }
-  .input-group label { display: block; font-family: var(--ff-mono); font-size: 11px; margin-bottom: 8px; color: var(--text-muted); }
-  .input-field {
-    width: 100%; padding: 14px 20px; border-radius: var(--radius-md); border: none; background: var(--base);
-    box-shadow: var(--shadow-pressed); font-family: var(--ff-body); font-size: 14px; color: var(--text-primary); outline: none; transition: box-shadow 0.3s ease;
-  }
-  .input-field:focus { box-shadow: inset 4px 4px 8px var(--base-dark), inset -4px -4px 8px var(--base-light), 0 0 0 2px var(--accent-1); }
+    .navbar a:hover { 
+      color: var(--accent-1);
+    }
 
-  .btn {
-    width: 100%; padding: 16px; border-radius: var(--radius-md); border: none; cursor: pointer; font-family: var(--ff-display);
-    font-weight: 600; font-size: 15px; background: var(--base); color: var(--text-primary); box-shadow: var(--shadow-raised); transition: all 0.2s ease;
-  }
-  .btn:hover { color: var(--accent-1); transform: translateY(-2px); }
-  .btn:active { box-shadow: var(--shadow-pressed); transform: translateY(0); }
+    /* =========================================
+       MAIN GRID LAYOUT
+       ========================================= */
+    .profile-wrapper {
+      width: 100%; 
+      max-width: 900px; 
+      display: grid;
+      grid-template-columns: 1fr 1.5fr; 
+      gap: 40px;
+      animation: fadeUp 0.8s ease forwards; 
+      opacity: 0; 
+      transform: translateY(20px);
+    }
 
-  #statusMessage { margin-top: 16px; font-family: var(--ff-mono); font-size: 12px; height: 16px; color: var(--accent-2); }
+    @media (max-width: 800px) { 
+      .profile-wrapper { 
+        grid-template-columns: 1fr;
+      } 
+    }
 
-  /* Right Side: Achievements */
-  .achievements-card h2 { font-family: var(--ff-display); font-size: 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-  .achievements-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .achievement-item {
-    background: var(--base); border-radius: var(--radius-sm); box-shadow: var(--shadow-pressed); padding: 20px;
-    display: flex; align-items: center; gap: 20px; transition: transform 0.2s ease;
-  }
-  .achievement-item:hover { transform: translateY(-2px); }
-  .ach-icon {
-    width: 50px; height: 50px; border-radius: 50%; background: var(--base); box-shadow: var(--shadow-raised);
-    display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
-  }
-  .ach-info h4 { font-family: var(--ff-display); font-size: 16px; margin-bottom: 4px; color: var(--text-primary); }
-  .ach-info p { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
-  .ach-date { font-family: var(--ff-mono); font-size: 10px; color: var(--accent-1); margin-top: 8px; display: block; }
+    .card {
+      background: var(--base); 
+      border-radius: var(--radius-lg); 
+      box-shadow: var(--shadow-raised);
+      padding: 40px;
+    }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+    /* =========================================
+       LEFT SIDE: PROFILE CARD
+       ========================================= */
+    .profile-card { 
+      text-align: center; 
+      display: flex; 
+      flex-direction: column;
+      align-items: center; 
+    }
 
-  /* Animations */
-  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-</style>
+    .avatar-container {
+      width: 100px; 
+      height: 100px; 
+      border-radius: 50%; 
+      background: var(--base); 
+      box-shadow: var(--shadow-raised);
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-bottom: 24px; 
+      position: relative; 
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .avatar-container::after { 
+      content: ''; 
+      position: absolute; 
+      inset: 8px; 
+      border-radius: 50%; 
+      background: var(--accent-grad); 
+      z-index: 1;
+    }
+
+    .avatar-text { 
+      position: relative; 
+      z-index: 2; 
+      font-family: var(--ff-display); 
+      font-weight: 700; 
+      font-size: 28px; 
+      color: #fff;
+    }
+
+    .username-display { 
+      font-family: var(--ff-display); 
+      font-size: 24px; 
+      font-weight: 700; 
+      margin-bottom: 4px; 
+    }
+
+    .email-display { 
+      font-family: var(--ff-mono); 
+      font-size: 12px;
+      color: var(--text-muted); 
+      margin-bottom: 20px; 
+    }
+    
+    .meta-tag {
+      display: inline-block; 
+      padding: 6px 14px; 
+      border-radius: 20px;
+      background: var(--base);
+      box-shadow: var(--shadow-pressed); 
+      font-family: var(--ff-mono); 
+      font-size: 11px; 
+      font-weight: 600;
+      color: var(--accent-1); 
+      margin-bottom: 30px; 
+      letter-spacing: 0.05em; 
+      text-transform: uppercase;
+    }
+
+    /* Form Elements */
+    .input-group { 
+      width: 100%; 
+      margin-bottom: 24px; 
+      text-align: left;
+    }
+
+    .input-group label { 
+      display: block; 
+      font-family: var(--ff-mono); 
+      font-size: 11px; 
+      margin-bottom: 8px; 
+      color: var(--text-muted);
+    }
+
+    .input-field {
+      width: 100%; 
+      padding: 14px 20px; 
+      border-radius: var(--radius-md); 
+      border: none; 
+      background: var(--base);
+      box-shadow: var(--shadow-pressed);
+      font-family: var(--ff-body); 
+      font-size: 14px; 
+      color: var(--text-primary); 
+      outline: none; 
+      transition: box-shadow 0.3s ease;
+    }
+
+    .input-field:focus { 
+      box-shadow: inset 4px 4px 8px var(--base-dark), inset -4px -4px 8px var(--base-light), 0 0 0 2px var(--accent-1);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%; 
+      padding: 16px; 
+      border-radius: var(--radius-md); 
+      border: none; 
+      cursor: pointer; 
+      font-family: var(--ff-display);
+      font-weight: 600; 
+      font-size: 15px; 
+      background: var(--base); 
+      color: var(--text-primary); 
+      box-shadow: var(--shadow-raised); 
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover { 
+      color: var(--accent-1);
+      transform: translateY(-2px); 
+    }
+
+    .btn:active { 
+      box-shadow: var(--shadow-pressed); 
+      transform: translateY(0); 
+    }
+
+    /* Admin Button Glow Effect */
+    .admin-btn {
+      margin-top: 16px;
+      background: var(--accent-grad);
+      color: white;
+      animation: adminGlow 2s ease-in-out infinite alternate;
+    }
+    
+    .admin-btn:hover {
+      color: white;
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    #statusMessage { 
+      margin-top: 16px; 
+      font-family: var(--ff-mono); 
+      font-size: 12px;
+      height: 16px; 
+      color: var(--accent-2); 
+    }
+
+    /* =========================================
+       RIGHT SIDE: ACHIEVEMENTS
+       ========================================= */
+    .achievements-card h2 { 
+      font-family: var(--ff-display); 
+      font-size: 22px;
+      margin-bottom: 24px; 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; 
+    }
+
+    .achievements-grid { 
+      display: grid; 
+      grid-template-columns: 1fr; 
+      gap: 16px;
+    }
+
+    .achievement-item {
+      background: var(--base); 
+      border-radius: var(--radius-sm); 
+      box-shadow: var(--shadow-pressed); 
+      padding: 20px;
+      display: flex; 
+      align-items: center;
+      gap: 20px; 
+      transition: transform 0.2s ease;
+    }
+
+    .achievement-item:hover { 
+      transform: translateY(-2px);
+    }
+
+    .ach-icon {
+      width: 50px; 
+      height: 50px; 
+      border-radius: 50%; 
+      background: var(--base); 
+      box-shadow: var(--shadow-raised);
+      display: flex;
+      align-items: center; 
+      justify-content: center; 
+      font-size: 24px; 
+      flex-shrink: 0;
+    }
+
+    .ach-info h4 { 
+      font-family: var(--ff-display); 
+      font-size: 16px; 
+      margin-bottom: 4px;
+      color: var(--text-primary); 
+    }
+
+    .ach-info p { 
+      font-size: 13px; 
+      color: var(--text-muted); 
+      line-height: 1.4; 
+    }
+
+    .ach-date { 
+      font-family: var(--ff-mono);
+      font-size: 10px; 
+      color: var(--accent-1); 
+      margin-top: 8px; 
+      display: block; 
+    }
+
+    .empty-state { 
+      text-align: center; 
+      padding: 40px 20px; 
+      color: var(--text-muted);
+      font-size: 14px; 
+    }
+
+    /* =========================================
+       ANIMATIONS
+       ========================================= */
+    @keyframes fadeUp { 
+      to { opacity: 1; transform: translateY(0); } 
+    }
+
+    @keyframes float { 
+      0%, 100% { transform: translateY(0); } 
+      50% { transform: translateY(-8px); } 
+    }
+
+    @keyframes adminGlow {
+      0% {
+        box-shadow: 0 0 5px var(--accent-1), 0 0 10px var(--accent-1);
+      }
+      100% {
+        box-shadow: 0 0 15px var(--accent-2), 0 0 25px var(--accent-2), 0 0 35px var(--accent-2);
+      }
+    }
+  </style>
 </head>
 <body>
 
-<canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-<header>
-  <nav class="navbar">
-    <a href="index.html">← Back to Portfolio</a>
-  </nav>
-</header>
+  <header>
+    <nav class="navbar">
+      <a href="index.html">← Back to Portfolio</a>
+    </nav>
+  </header>
 
-<div class="profile-wrapper">
-  <!-- Left Side: Profile Control -->
-  <div class="card profile-card">
-    <div class="avatar-container">
-      <span class="avatar-text" id="avatarInitials">?</span>
+  <div class="profile-wrapper">
+    
+    <div class="card profile-card">
+      <div class="avatar-container">
+        <span class="avatar-text" id="avatarInitials">?</span>
+      </div>
+      
+      <h1 class="username-display" id="displayName">Loading...</h1>
+      <p class="email-display" id="displayEmail">Please log in</p>
+      <div class="meta-tag" id="displayDegree">Update your info</div>
+
+      <div class="input-group">
+        <label>Display Name</label>
+        <input type="text" id="newUsername" class="input-field" placeholder="Enter new username..." autocomplete="off">
+      </div>
+      
+      <button class="btn" id="updateBtn">Update Profile</button>
+      
+      <button class="btn admin-btn" id="adminBtn" style="display: none;">⚡ Admin Dashboard</button>
+      
+      <div id="statusMessage"></div>
     </div>
-    <h1 class="username-display" id="displayName">Loading...</h1>
-    <p class="email-display" id="displayEmail">Please log in</p>
-    <div class="meta-tag" id="displayDegree">Update your info</div>
 
-    <div class="input-group">
-      <label>Display Name</label>
-      <input type="text" id="newUsername" class="input-field" placeholder="Enter new username..." autocomplete="off">
+    <div class="card achievements-card">
+      <h2>🏆 Unlocked Achievements</h2>
+      <div class="achievements-grid" id="achievementsGrid">
+        <div class="empty-state">Loading achievements...</div>
+      </div>
     </div>
     
-    <button class="btn" id="updateBtn">Update Profile</button>
-    <div id="statusMessage"></div>
   </div>
 
-  <!-- Right Side: Achievements -->
-  <div class="card achievements-card">
-    <h2>🏆 Unlocked Achievements</h2>
-    <div class="achievements-grid" id="achievementsGrid">
-      <div class="empty-state">Loading achievements...</div>
-    </div>
-  </div>
-</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSy39eeFdJONcPSFJ76BJaciS1l6ESvTE",
+      authDomain: "zynexalpha.firebaseapp.com",
+      projectId: "zynexalpha",
+      storageBucket: "zynexalpha.firebasestorage.app",
+      messagingSenderId: "780065160785",
+      appId: "1:780065160785:web:b168affe481f55d7154270",
+      measurementId: "G-H70X75N1RF"
+    };
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCSy39eeFdJONcPSFJ76BJaciS1l6ESvTE",
-    authDomain: "zynexalpha.firebaseapp.com",
-    projectId: "zynexalpha",
-    storageBucket: "zynexalpha.firebasestorage.app",
-    messagingSenderId: "780065160785",
-    appId: "1:780065160785:web:b168affe481f55d7154270",
-    measurementId: "G-H70X75N1RF"
-  };
+    // UI Elements
+    const displayNameEl = document.getElementById('displayName');
+    const displayEmailEl = document.getElementById('displayEmail');
+    const displayDegreeEl = document.getElementById('displayDegree');
+    const avatarInitialsEl = document.getElementById('avatarInitials');
+    const newUsernameInput = document.getElementById('newUsername');
+    const updateBtn = document.getElementById('updateBtn');
+    const adminBtn = document.getElementById('adminBtn'); // Added Admin Button Reference
+    const statusMessage = document.getElementById('statusMessage');
+    const achievementsGrid = document.getElementById('achievementsGrid');
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // UI Elements
-  const displayNameEl = document.getElementById('displayName');
-  const displayEmailEl = document.getElementById('displayEmail');
-  const displayDegreeEl = document.getElementById('displayDegree');
-  const avatarInitialsEl = document.getElementById('avatarInitials');
-  const newUsernameInput = document.getElementById('newUsername');
-  const updateBtn = document.getElementById('updateBtn');
-  const statusMessage = document.getElementById('statusMessage');
-  const achievementsGrid = document.getElementById('achievementsGrid');
-
-  // Helper to get initials
-  function getInitials(name) {
-    if (!name) return '?';
-    return name.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
-  }
-
-  // Render Achievements
-  function renderAchievements(achievements) {
-    if (!achievements || achievements.length === 0) {
-      achievementsGrid.innerHTML = `
-        <div class="empty-state">
-          No achievements yet. Explore the portfolio and complete tasks to unlock them!
-        </div>`;
-      return;
+    // Helper: Extract Initials
+    function getInitials(name) {
+      if (!name) return '?';
+      return name.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
     }
 
-    achievementsGrid.innerHTML = '';
-    achievements.forEach(ach => {
-      const dateStr = new Date(ach.date).toLocaleDateString();
-      const achEl = document.createElement('div');
-      achEl.className = 'achievement-item';
-      achEl.innerHTML = `
-        <div class="ach-icon">${ach.icon || '🌟'}</div>
-        <div class="ach-info">
-          <h4>${ach.title}</h4>
-          <p>${ach.description}</p>
-          <span class="ach-date">Unlocked: ${dateStr}</span>
-        </div>
-      `;
-      achievementsGrid.appendChild(achEl);
-    });
-  }
-
-  // Listen for auth state
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const name = user.displayName || 'Set your username';
-      displayNameEl.textContent = name;
-      displayEmailEl.textContent = user.email;
-      avatarInitialsEl.textContent = getInitials(user.displayName || user.email);
-      newUsernameInput.value = user.displayName || '';
-
-      // Fetch user data & achievements from Firestore
-      try {
-        const userRef = doc(db, 'users', user.uid);
-        const docSnap = await getDoc(userRef);
-        
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data.degree || data.profession) {
-            displayDegreeEl.textContent = data.degree || data.profession;
-          } else {
-            displayDegreeEl.textContent = "Welcome back!";
-          }
-          renderAchievements(data.achievements || []);
-        } else {
-          renderAchievements([]);
-          displayDegreeEl.textContent = "New User";
-        }
-      } catch(err) {
-        console.error("Error fetching Firestore data:", err);
-        achievementsGrid.innerHTML = `<div class="empty-state" style="color: #ff6b6b;">Failed to load achievements.</div>`;
+    // Helper: Render Achievements Array
+    function renderAchievements(achievements) {
+      if (!achievements || achievements.length === 0) {
+        achievementsGrid.innerHTML = `
+          <div class="empty-state">
+            No achievements yet. Explore the portfolio and complete tasks to unlock them!
+          </div>`;
+        return;
       }
-    } else {
-      window.location.href = 'login.html';
-    }
-  });
 
-  // Handle Username Update
-  updateBtn.addEventListener('click', async () => {
-    const user = auth.currentUser;
-    const newName = newUsernameInput.value.trim();
-
-    if (user && newName) {
-      updateBtn.textContent = 'Updating...';
-      try {
-        // Update Auth Profile
-        await updateProfile(user, { displayName: newName });
-        
-        // Update Firestore Doc
-        const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, { displayName: newName });
-
-        // Update UI
-        displayNameEl.textContent = newName;
-        avatarInitialsEl.textContent = getInitials(newName);
-        statusMessage.textContent = 'Profile updated successfully!';
-        statusMessage.style.color = 'var(--accent-2)';
-        
-        setTimeout(() => { statusMessage.textContent = ''; }, 3000);
-      } catch (error) {
-        console.error(error);
-        statusMessage.textContent = 'Error updating profile.';
-        statusMessage.style.color = '#ff6b6b';
-      } finally {
-        updateBtn.textContent = 'Update Profile';
-      }
-    }
-  });
-</script>
-
-<script>
-  // Background particles specific for the profile view
-  (function(){
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h, particles;
-
-    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-
-    function initParticles(){
-      const count = Math.min(60, Math.floor((w * h) / 26000));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, r: Math.random() * 1.5 + 1
-      }));
-    }
-
-    function frame(){
-      ctx.clearRect(0, 0, w, h);
-      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const rgb = isDark ? '255,255,255' : '10,10,14';
-
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-        
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb},0.4)`; ctx.fill();
+      achievementsGrid.innerHTML = '';
+      achievements.forEach(ach => {
+        const dateStr = new Date(ach.date).toLocaleDateString();
+        const achEl = document.createElement('div');
+        achEl.className = 'achievement-item';
+        achEl.innerHTML = `
+          <div class="ach-icon">${ach.icon || '🌟'}</div>
+          <div class="ach-info">
+            <h4>${ach.title}</h4>
+            <p>${ach.description}</p>
+            <span class="ach-date">Unlocked: ${dateStr}</span>
+          </div>
+        `;
+        achievementsGrid.appendChild(achEl);
       });
+    }
 
-      for (let i = 0; i < particles.length; i++){
-        for (let j = i + 1; j < particles.length; j++){
-          const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+    // Auth State Listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Set basic profile fields
+        const name = user.displayName || 'Set your username';
+        displayNameEl.textContent = name;
+        displayEmailEl.textContent = user.email;
+        avatarInitialsEl.textContent = getInitials(user.displayName || user.email);
+        newUsernameInput.value = user.displayName || '';
 
-          if (dist < 120){
-            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(${rgb},${0.15 * (1 - dist / 120)})`; ctx.lineWidth = 1; ctx.stroke();
+        // Check for Admin Email and reveal the glowing button
+        if (user.email === 'devdutts178@gmail.com') {
+          adminBtn.style.display = 'block';
+        } else {
+          adminBtn.style.display = 'none';
+        }
+
+        // Fetch deep user data (achievements, profession) from Firestore
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(userRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.degree || data.profession) {
+              displayDegreeEl.textContent = data.degree || data.profession;
+            } else {
+              displayDegreeEl.textContent = "Welcome back!";
+            }
+            renderAchievements(data.achievements || []);
+          } else {
+            renderAchievements([]);
+            displayDegreeEl.textContent = "New User";
           }
+        } catch(err) {
+          console.error("Error fetching Firestore data:", err);
+          achievementsGrid.innerHTML = `<div class="empty-state" style="color: #ff6b6b;">Failed to load achievements.</div>`;
+        }
+      } else {
+        // Redirect to login if unauthenticated
+        window.location.href = 'login.html';
+      }
+    });
+
+    // Handle User Profile Update
+    updateBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      const newName = newUsernameInput.value.trim();
+
+      if (user && newName) {
+        updateBtn.textContent = 'Updating...';
+        try {
+          // Update Firebase Auth Profile
+          await updateProfile(user, { displayName: newName });
+          
+          // Update Firestore Document
+          const userRef = doc(db, 'users', user.uid);
+          await updateDoc(userRef, { displayName: newName });
+
+          // Update UI
+          displayNameEl.textContent = newName;
+          avatarInitialsEl.textContent = getInitials(newName);
+          statusMessage.textContent = 'Profile updated successfully!';
+          statusMessage.style.color = 'var(--accent-2)';
+          
+          // Clear message after a delay
+          setTimeout(() => { 
+            statusMessage.textContent = ''; 
+          }, 3000);
+
+        } catch (error) {
+          console.error(error);
+          statusMessage.textContent = 'Error updating profile.';
+          statusMessage.style.color = '#ff6b6b';
+        } finally {
+          updateBtn.textContent = 'Update Profile';
         }
       }
-      requestAnimationFrame(frame);
-    }
-    resize(); initParticles(); frame();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
-  })();
-</script>
+    });
+
+// Handle Admin Dashboard Redirect
+    adminBtn.addEventListener('click', () => {
+      window.location.href = 'admin.html';
+    });
+  </script>
+
+  <script>
+    (function(){
+      const canvas = document.getElementById('bgCanvas');
+      const ctx = canvas.getContext('2d');
+      let w, h, particles;
+
+      // Ensure canvas fits window
+      function resize() { 
+        w = canvas.width = window.innerWidth; 
+        h = canvas.height = window.innerHeight; 
+      }
+
+      // Populate particles based on screen area
+      function initParticles() {
+        const count = Math.min(60, Math.floor((w * h) / 26000));
+        particles = Array.from({ length: count }, () => ({
+          x: Math.random() * w, 
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.3, 
+          vy: (Math.random() - 0.5) * 0.3, 
+          r: Math.random() * 1.5 + 1
+        }));
+      }
+
+      // Animation loop
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        
+        // Match system theme preference
+        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const rgb = isDark ? '255,255,255' : '10,10,14';
+
+        // Update particle positions
+        particles.forEach(p => {
+          p.x += p.vx; 
+          p.y += p.vy;
+          
+          // Screen wrap
+          if (p.x < 0) p.x = w; 
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+          
+          ctx.beginPath(); 
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${rgb}, 0.4)`; 
+          ctx.fill();
+        });
+
+        // Draw connection lines
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            // Connect if close enough
+            if (dist < 120) {
+              ctx.beginPath(); 
+              ctx.moveTo(particles[i].x, particles[i].y); 
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(${rgb}, ${0.15 * (1 - dist / 120)})`; 
+              ctx.lineWidth = 1; 
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(frame);
+      }
+
+      // Initialize
+      resize(); 
+      initParticles(); 
+      frame();
+      
+      // Handle window resizing
+      window.addEventListener('resize', () => { 
+        resize(); 
+        initParticles(); 
+      });
+    })();
+  </script>
 </body>
 </html>
