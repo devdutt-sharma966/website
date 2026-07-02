@@ -190,27 +190,130 @@ section{margin-bottom:60px;}
       <div id="projectsList"></div>
     </section>
 
-    <!-- ===== Education ===== -->
+    <!-- ===== About ===== -->
     <section>
-      <div class="section-title"><span>Education</span></div>
-      <div class="message" id="eduMessage"></div>
+      <div class="section-title"><span>About</span></div>
+      <div class="message" id="aboutMessage"></div>
       <div class="form-card open">
         <div class="form-row">
-          <label>DEGREE / TITLE</label>
-          <input type="text" id="eTitle" placeholder="B.Tech, Computer Science & Engineering — AI & ML">
+          <label>PARAGRAPH 1</label>
+          <textarea id="aP1" placeholder="First paragraph of your About section"></textarea>
         </div>
         <div class="form-row">
-          <label>META LINE</label>
-          <input type="text" id="eMeta" placeholder="MANIPAL INSTITUTE OF TECHNOLOGY · CURRENT">
+          <label>PARAGRAPH 2</label>
+          <textarea id="aP2" placeholder="Second paragraph"></textarea>
+        </div>
+        <div class="form-row">
+          <label>STAT 1</label>
+          <div class="form-grid">
+            <input type="text" id="aStatValue0" placeholder="Value e.g. CSE">
+            <input type="text" id="aStatLabel0" placeholder="Label e.g. AI & ML BRANCH">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>STAT 2</label>
+          <div class="form-grid">
+            <input type="text" id="aStatValue1" placeholder="Value e.g. MIT">
+            <input type="text" id="aStatLabel1" placeholder="Label e.g. MANIPAL">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>STAT 3</label>
+          <div class="form-grid">
+            <input type="text" id="aStatValue2" placeholder="Value e.g. ML">
+            <input type="text" id="aStatLabel2" placeholder="Label e.g. CORE FOCUS">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>STAT 4</label>
+          <div class="form-grid">
+            <input type="text" id="aStatValue3" placeholder="Value e.g. ∞">
+            <input type="text" id="aStatLabel3" placeholder="Label e.g. CURIOSITY">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ok" id="saveAboutBtn">Save About</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Skills ===== -->
+    <section>
+      <div class="section-title">
+        <span>Skills</span>
+        <button class="btn btn-accent" id="addSkillCatBtn">+ Add Category</button>
+      </div>
+      <div class="message" id="skillsMessage"></div>
+      <div id="skillsCategories"></div>
+      <div class="form-actions" style="margin-top:6px;">
+        <button class="btn btn-ok" id="saveSkillsBtn">Save Skills</button>
+      </div>
+    </section>
+
+    <!-- ===== Experience ===== -->
+    <section>
+      <div class="section-title">
+        <span>Experience</span>
+        <button class="btn btn-accent" id="newExpBtn">+ Add Experience</button>
+      </div>
+      <div class="message" id="expMessage"></div>
+      <div class="form-card" id="expForm">
+        <input type="hidden" id="expDocId">
+        <div class="form-grid">
+          <div class="form-row">
+            <label>META (e.g. 2023 - Present)</label>
+            <input type="text" id="xMeta" placeholder="2023 - Present">
+          </div>
+          <div class="form-row">
+            <label>TITLE</label>
+            <input type="text" id="xTitle" placeholder="AI/ML Researcher">
+          </div>
         </div>
         <div class="form-row">
           <label>DESCRIPTION</label>
-          <textarea id="eDescription" placeholder="Coursework, focus areas, etc."></textarea>
+          <textarea id="xDescription" placeholder="What you did in this role"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-ok" id="saveExpBtn">Save Experience</button>
+          <button class="btn btn-ghost" id="cancelExpBtn">Cancel</button>
+        </div>
+      </div>
+      <div id="expList"></div>
+    </section>
+
+    <!-- ===== Education ===== -->
+    <section>
+      <div class="section-title">
+        <span>Education</span>
+        <button class="btn btn-accent" id="newEduBtn">+ Add Education</button>
+      </div>
+      <div class="message" id="eduMessage"></div>
+      <div class="form-card" id="eduForm">
+        <input type="hidden" id="eduDocId">
+        <div class="form-grid">
+          <div class="form-row">
+            <label>DEGREE / TITLE</label>
+            <input type="text" id="eTitle" placeholder="B.Tech, Computer Science & Engineering — AI & ML">
+          </div>
+          <div class="form-row">
+            <label>META (institution · status)</label>
+            <input type="text" id="eMeta" placeholder="MANIPAL INSTITUTE OF TECHNOLOGY · CURRENT">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>DESCRIPTION</label>
+          <textarea id="eDescription" placeholder="Coursework, focus areas, achievements, etc."></textarea>
+        </div>
+        <div class="form-row">
+          <label>DISPLAY ORDER (lower shows first — leave as 0 if you don't mind)</label>
+          <input type="text" id="eOrder" placeholder="0">
         </div>
         <div class="form-actions">
           <button class="btn btn-ok" id="saveEduBtn">Save Education</button>
+          <button class="btn btn-ghost" id="cancelEduBtn">Cancel</button>
         </div>
       </div>
+      <div id="eduList"></div>
     </section>
 
   </main>
@@ -248,6 +351,9 @@ section{margin-bottom:60px;}
       document.getElementById('adminEmail').textContent = user.email;
       initProjects();
       initEducation();
+      initAbout();
+      initSkills();
+      initExperience();
     } else {
       gateChecking.style.display = 'none';
       adminApp.style.display = 'none';
@@ -375,35 +481,298 @@ section{margin-bottom:60px;}
   }
 
   /* ================= EDUCATION ================= */
-  const EDU_DOC = 'siteContent/education';
+  const eduForm = document.getElementById('eduForm');
+  const eduList = document.getElementById('eduList');
 
-  function initEducation(){
-    db.doc(EDU_DOC).get().then(snap => {
-      if (snap.exists){
-        const d = snap.data();
-        document.getElementById('eTitle').value = d.title || '';
-        document.getElementById('eMeta').value = d.meta || '';
-        document.getElementById('eDescription').value = d.description || '';
-      } else {
-        document.getElementById('eTitle').value = 'B.Tech, Computer Science & Engineering — AI & ML';
-        document.getElementById('eMeta').value = 'MANIPAL INSTITUTE OF TECHNOLOGY · CURRENT';
-        document.getElementById('eDescription').value = 'Coursework spans data structures & algorithms, machine learning, deep learning, and applied statistics, alongside project-based work in computer vision and NLP.';
-      }
-    });
+  function resetEduForm(){
+    document.getElementById('eduDocId').value = '';
+    document.getElementById('eTitle').value = '';
+    document.getElementById('eMeta').value = '';
+    document.getElementById('eDescription').value = '';
+    document.getElementById('eOrder').value = '0';
   }
+
+  document.getElementById('newEduBtn').addEventListener('click', () => {
+    resetEduForm();
+    eduForm.classList.add('open');
+    eduForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  document.getElementById('cancelEduBtn').addEventListener('click', () => {
+    eduForm.classList.remove('open');
+  });
 
   document.getElementById('saveEduBtn').addEventListener('click', () => {
     const title = document.getElementById('eTitle').value.trim();
     const meta = document.getElementById('eMeta').value.trim();
     const description = document.getElementById('eDescription').value.trim();
+    const orderRaw = document.getElementById('eOrder').value.trim();
+    const order = orderRaw === '' || isNaN(Number(orderRaw)) ? 0 : Number(orderRaw);
+    const docId = document.getElementById('eduDocId').value;
+
     if (!title){
-      flash('eduMessage', 'Title is required.', 'error');
+      flash('eduMessage', 'Degree / title is required.', 'error');
       return;
     }
-    db.doc(EDU_DOC).set({ title, meta, description })
-      .then(() => flash('eduMessage', 'Education updated.', 'success'))
+
+    const data = { title, meta, description, order };
+    const promise = docId
+      ? db.collection('education').doc(docId).update(data)
+      : db.collection('education').add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+    promise
+      .then(() => {
+        flash('eduMessage', docId ? 'Education updated.' : 'Education added.', 'success');
+        eduForm.classList.remove('open');
+        resetEduForm();
+      })
       .catch(err => flash('eduMessage', err.message, 'error'));
   });
+
+  function editEducation(doc){
+    const d = doc.data();
+    document.getElementById('eduDocId').value = doc.id;
+    document.getElementById('eTitle').value = d.title || '';
+    document.getElementById('eMeta').value = d.meta || '';
+    document.getElementById('eDescription').value = d.description || '';
+    document.getElementById('eOrder').value = (d.order ?? 0);
+    eduForm.classList.add('open');
+    eduForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function deleteEducation(id, title){
+    if (!confirm(`Delete "${title}"? This can't be undone.`)) return;
+    db.collection('education').doc(id).delete()
+      .then(() => flash('eduMessage', 'Education entry deleted.', 'success'))
+      .catch(err => flash('eduMessage', err.message, 'error'));
+  }
+
+  function initEducation(){
+    db.collection('education').orderBy('order', 'asc').onSnapshot(snapshot => {
+      if (snapshot.empty){
+        eduList.innerHTML = '<div class="empty-note">No education entries yet. Add your first one above.</div>';
+        return;
+      }
+      eduList.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = document.createElement('div');
+        row.className = 'project-row';
+        row.innerHTML = `
+          <div class="info">
+            <span class="cat">${d.meta || ''}${d.order ? ' · ORDER ' + d.order : ''}</span>
+            <h3>${d.title}</h3>
+            <p>${d.description || ''}</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn" data-action="edit">Edit</button>
+            <button class="btn btn-danger" data-action="delete">Delete</button>
+          </div>`;
+        row.querySelector('[data-action="edit"]').addEventListener('click', () => editEducation(doc));
+        row.querySelector('[data-action="delete"]').addEventListener('click', () => deleteEducation(doc.id, d.title));
+        eduList.appendChild(row);
+      });
+    }, err => {
+      eduList.innerHTML = `<div class="empty-note">Couldn't load education: ${err.message}</div>`;
+    });
+  }
+
+  /* ================= ABOUT ================= */
+  const ABOUT_DEFAULTS = {
+    paragraphs: [
+      "I'm currently pursuing my B.Tech in Computer Science & Engineering, specializing in AI & Machine Learning, at Manipal Institute of Technology. My focus sits at the intersection of applied ML, clean software engineering, and building products people can actually use.",
+      "Outside of coursework, I like exploring model architectures, contributing to small open-source tools, and refining the way I present technical work — like this page."
+    ],
+    stats: [
+      { value: 'CSE', label: 'AI & ML BRANCH' },
+      { value: 'MIT', label: 'MANIPAL' },
+      { value: 'ML', label: 'CORE FOCUS' },
+      { value: '∞', label: 'CURIOSITY' }
+    ]
+  };
+
+  function initAbout(){
+    db.doc('siteContent/about').get().then(snap => {
+      const d = snap.exists ? snap.data() : ABOUT_DEFAULTS;
+      const paragraphs = (d.paragraphs && d.paragraphs.length) ? d.paragraphs : ABOUT_DEFAULTS.paragraphs;
+      const stats = (d.stats && d.stats.length === 4) ? d.stats : ABOUT_DEFAULTS.stats;
+      document.getElementById('aP1').value = paragraphs[0] || '';
+      document.getElementById('aP2').value = paragraphs[1] || '';
+      stats.forEach((s, i) => {
+        document.getElementById('aStatValue' + i).value = s.value || '';
+        document.getElementById('aStatLabel' + i).value = s.label || '';
+      });
+    });
+  }
+
+  document.getElementById('saveAboutBtn').addEventListener('click', () => {
+    const p1 = document.getElementById('aP1').value.trim();
+    const p2 = document.getElementById('aP2').value.trim();
+    if (!p1){
+      flash('aboutMessage', 'Paragraph 1 is required.', 'error');
+      return;
+    }
+    const stats = [0, 1, 2, 3].map(i => ({
+      value: document.getElementById('aStatValue' + i).value.trim(),
+      label: document.getElementById('aStatLabel' + i).value.trim()
+    }));
+    db.doc('siteContent/about').set({ paragraphs: [p1, p2], stats })
+      .then(() => flash('aboutMessage', 'About updated.', 'success'))
+      .catch(err => flash('aboutMessage', err.message, 'error'));
+  });
+
+  /* ================= SKILLS ================= */
+  const SKILLS_DEFAULTS = [
+    { name: 'Languages', chips: ['Python', 'C++', 'JavaScript', 'SQL', 'Java'] },
+    { name: 'AI / ML', chips: ['TensorFlow', 'PyTorch', 'Scikit-learn', 'OpenCV', 'Pandas'] },
+    { name: 'Tools', chips: ['Git', 'Docker', 'VS Code', 'Jupyter', 'Firebase'] }
+  ];
+  let skillsState = [];
+
+  function escapeAttr(str){
+    return String(str).replace(/"/g, '&quot;');
+  }
+
+  function renderSkillsCategories(){
+    const container = document.getElementById('skillsCategories');
+    container.innerHTML = '';
+    skillsState.forEach((cat, i) => {
+      const row = document.createElement('div');
+      row.className = 'project-row';
+      row.innerHTML = `
+        <div class="info" style="width:100%;">
+          <div class="form-row"><label>CATEGORY NAME</label><input type="text" class="catName" value="${escapeAttr(cat.name || '')}"></div>
+          <div class="form-row" style="margin-bottom:0;"><label>CHIPS (comma separated)</label><input type="text" class="catChips" value="${escapeAttr((cat.chips || []).join(', '))}"></div>
+        </div>
+        <div class="row-actions"><button class="btn btn-danger" data-action="removeCat">Remove</button></div>`;
+      row.querySelector('[data-action="removeCat"]').addEventListener('click', () => {
+        skillsState.splice(i, 1);
+        renderSkillsCategories();
+      });
+      container.appendChild(row);
+    });
+  }
+
+  document.getElementById('addSkillCatBtn').addEventListener('click', () => {
+    skillsState.push({ name: '', chips: [] });
+    renderSkillsCategories();
+  });
+
+  function initSkills(){
+    db.doc('siteContent/skills').get().then(snap => {
+      skillsState = (snap.exists && snap.data().categories && snap.data().categories.length)
+        ? snap.data().categories
+        : JSON.parse(JSON.stringify(SKILLS_DEFAULTS));
+      renderSkillsCategories();
+    });
+  }
+
+  document.getElementById('saveSkillsBtn').addEventListener('click', () => {
+    const rows = document.querySelectorAll('#skillsCategories .project-row');
+    const categories = Array.from(rows).map(row => ({
+      name: row.querySelector('.catName').value.trim(),
+      chips: row.querySelector('.catChips').value.split(',').map(s => s.trim()).filter(Boolean)
+    })).filter(c => c.name);
+
+    if (!categories.length){
+      flash('skillsMessage', 'Add at least one category with a name.', 'error');
+      return;
+    }
+    db.doc('siteContent/skills').set({ categories })
+      .then(() => { skillsState = categories; flash('skillsMessage', 'Skills updated.', 'success'); })
+      .catch(err => flash('skillsMessage', err.message, 'error'));
+  });
+
+  /* ================= EXPERIENCE ================= */
+  const expForm = document.getElementById('expForm');
+  const expList = document.getElementById('expList');
+
+  function resetExpForm(){
+    document.getElementById('expDocId').value = '';
+    document.getElementById('xMeta').value = '';
+    document.getElementById('xTitle').value = '';
+    document.getElementById('xDescription').value = '';
+  }
+
+  document.getElementById('newExpBtn').addEventListener('click', () => {
+    resetExpForm();
+    expForm.classList.add('open');
+    expForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  document.getElementById('cancelExpBtn').addEventListener('click', () => {
+    expForm.classList.remove('open');
+  });
+
+  document.getElementById('saveExpBtn').addEventListener('click', () => {
+    const meta = document.getElementById('xMeta').value.trim();
+    const title = document.getElementById('xTitle').value.trim();
+    const description = document.getElementById('xDescription').value.trim();
+    const docId = document.getElementById('expDocId').value;
+
+    if (!title || !description){
+      flash('expMessage', 'Title and description are required.', 'error');
+      return;
+    }
+
+    const data = { meta, title, description };
+    const promise = docId
+      ? db.collection('experience').doc(docId).update(data)
+      : db.collection('experience').add({ ...data, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+    promise
+      .then(() => {
+        flash('expMessage', docId ? 'Experience updated.' : 'Experience added.', 'success');
+        expForm.classList.remove('open');
+        resetExpForm();
+      })
+      .catch(err => flash('expMessage', err.message, 'error'));
+  });
+
+  function editExperience(doc){
+    const d = doc.data();
+    document.getElementById('expDocId').value = doc.id;
+    document.getElementById('xMeta').value = d.meta || '';
+    document.getElementById('xTitle').value = d.title || '';
+    document.getElementById('xDescription').value = d.description || '';
+    expForm.classList.add('open');
+    expForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function deleteExperience(id, title){
+    if (!confirm(`Delete "${title}"? This can't be undone.`)) return;
+    db.collection('experience').doc(id).delete()
+      .then(() => flash('expMessage', 'Experience deleted.', 'success'))
+      .catch(err => flash('expMessage', err.message, 'error'));
+  }
+
+  function initExperience(){
+    db.collection('experience').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+      if (snapshot.empty){
+        expList.innerHTML = '<div class="empty-note">No experience entries yet. Add your first one above.</div>';
+        return;
+      }
+      expList.innerHTML = '';
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = document.createElement('div');
+        row.className = 'project-row';
+        row.innerHTML = `
+          <div class="info">
+            <span class="cat">${d.meta || ''}</span>
+            <h3>${d.title}</h3>
+            <p>${d.description || ''}</p>
+          </div>
+          <div class="row-actions">
+            <button class="btn" data-action="edit">Edit</button>
+            <button class="btn btn-danger" data-action="delete">Delete</button>
+          </div>`;
+        row.querySelector('[data-action="edit"]').addEventListener('click', () => editExperience(doc));
+        row.querySelector('[data-action="delete"]').addEventListener('click', () => deleteExperience(doc.id, d.title));
+        expList.appendChild(row);
+      });
+    }, err => {
+      expList.innerHTML = `<div class="empty-note">Couldn't load experience: ${err.message}</div>`;
+    });
+  }
 </script>
 </body>
 </html>
