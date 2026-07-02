@@ -6,7 +6,7 @@
 <title>Projects — Devdut Sharma</title>
 <meta name="description" content="Projects by Devdut Sharma, CSE AI/ML student at Manipal Institute of Technology.">
 <script>
-  // Applied before first paint to avoid a flash of the wrong theme
+  // Applied before first paint to avoid a flash of the wrong theme [cite: 121]
   (function(){
     try{
       var pref = localStorage.getItem('theme') || 'system';
@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ===== EXISTING THEME & CSS VARIABLES ===== */
   :root{
     --base:#E6EBF2;
     --base-light:#FFFFFF;
@@ -58,8 +59,9 @@
   ul{list-style:none;}
   :focus-visible{outline:2px solid var(--accent-1);outline-offset:3px;border-radius:6px;}
   .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  .hidden { display: none !important; }
 
-  /* ===== Navbar (shared) ===== */
+  /* ===== NAVBAR ===== */
   header{position:fixed;top:20px;left:0;right:0;z-index:500;display:flex;justify-content:center;}
   .navbar{
     width:min(920px, calc(100% - 48px));
@@ -94,15 +96,8 @@
   .logout-btn{width:26px;height:26px;border-radius:50%;border:none;background:var(--base);box-shadow:var(--shadow-raised-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);flex-shrink:0;}
   .logout-btn:hover{color:var(--accent-1);}
   .logout-btn svg{width:13px;height:13px;}
-  @media (max-width:560px){ .user-name{display:none;} }
-  @media (max-width:760px){
-    .nav-links{position:fixed;top:88px;right:24px;left:24px;flex-direction:column;align-items:stretch;padding:10px;box-shadow:var(--shadow-raised);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .25s ease,transform .25s ease;}
-    .nav-links.open{opacity:1;transform:translateY(0);pointer-events:auto;}
-    .nav-links a{text-align:center;padding:12px 16px;}
-    .nav-cta{display:flex;}
-  }
-
-  /* ===== Page head ===== */
+  
+  /* ===== PAGE HEAD ===== */
   .page-hero{padding:160px 0 60px;}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-1);background:var(--base);padding:8px 16px;border-radius:100px;box-shadow:var(--shadow-pressed);margin-bottom:22px;}
   .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 8px var(--accent-2);}
@@ -110,7 +105,64 @@
   h1 span{background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
   .page-desc{color:var(--text-muted);max-width:560px;font-size:15.5px;}
 
-  /* ===== Filters ===== */
+  /* ===== ADMIN PANEL UI ===== */
+  .admin-panel {
+    background: var(--base);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-raised);
+    padding: 40px;
+    margin-bottom: 60px;
+    border: 2px dashed var(--accent-1);
+  }
+  .admin-panel h2 {
+    font-family: var(--ff-display);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--accent-1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full-width { grid-column: 1 / -1; }
+  .form-label { font-family: var(--ff-mono); font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+  .form-input {
+    background: var(--base);
+    border: none;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-pressed);
+    color: var(--text-primary);
+    font-family: var(--ff-body);
+    font-size: 14px;
+    outline: none;
+  }
+  .form-input:focus { box-shadow: var(--shadow-pressed), 0 0 0 2px var(--accent-1); }
+  .form-checkbox { display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: var(--ff-mono); font-size: 13px;}
+  .btn-submit {
+    background: var(--accent-grad);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: var(--radius-md);
+    font-family: var(--ff-display);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: var(--shadow-raised-sm);
+    transition: transform 0.2s;
+    margin-top: 20px;
+  }
+  .btn-submit:active { transform: translateY(2px); box-shadow: var(--shadow-pressed); }
+  .admin-msg { margin-top: 15px; font-family: var(--ff-mono); font-size: 13px; font-weight: bold;}
+
+  /* ===== FILTERS & PROJECTS ===== */
   .filter-row{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0 44px;}
   .filter-chip{
     font-family:var(--ff-mono);font-size:12.5px;padding:10px 18px;border-radius:100px;
@@ -120,11 +172,7 @@
   .filter-chip:hover{color:var(--text-primary);}
   .filter-chip.active{color:var(--accent-1);box-shadow:var(--shadow-pressed);}
 
-  /* ===== Project grid ===== */
-  .projects-grid{
-    display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:26px;
-    padding-bottom:100px;
-  }
+  .projects-grid{ display:grid;grid-template-columns:repeat(auto-fill, minmax(320px,1fr));gap:26px; padding-bottom:100px; }
   .project-card{
     background:var(--base);border-radius:var(--radius-md);box-shadow:var(--shadow-raised-sm);
     padding:28px;display:flex;flex-direction:column;
@@ -149,24 +197,7 @@
   }
   .link-btn:hover{box-shadow:var(--shadow-pressed);color:var(--accent-1);}
   .link-btn.disabled{opacity:.4;pointer-events:none;}
-
-  .empty-state{
-    text-align:center;padding:70px 30px;background:var(--base);border-radius:var(--radius-lg);
-    box-shadow:var(--shadow-pressed);color:var(--text-muted);font-size:14.5px;
-  }
-
-  /* ===== How to add (repo-style instructions) ===== */
-  .howto{
-    background:var(--base);border-radius:var(--radius-lg);box-shadow:var(--shadow-raised);
-    padding:40px;margin-bottom:100px;
-  }
-  .howto h2{font-family:var(--ff-display);font-size:1.3rem;margin-bottom:12px;}
-  .howto p{color:var(--text-muted);font-size:14.5px;margin-bottom:18px;max-width:640px;}
-  .code-block{
-    background:var(--base);box-shadow:var(--shadow-pressed);border-radius:var(--radius-sm);
-    padding:20px 22px;font-family:var(--ff-mono);font-size:12.5px;color:var(--text-primary);
-    overflow-x:auto;white-space:pre;line-height:1.7;
-  }
+  .empty-state{ text-align:center;padding:70px 30px;background:var(--base);border-radius:var(--radius-lg); box-shadow:var(--shadow-pressed);color:var(--text-muted);font-size:14.5px; }
 
   footer{text-align:center;padding:36px 0 48px;font-family:var(--ff-mono);font-size:12px;color:var(--text-muted);}
 </style>
@@ -176,214 +207,190 @@
 
 <header>
   <nav class="navbar">
-    <a href="index.html" class="brand">
-      <span class="brand-mark">DS</span>
-      Devdut Sharma
-    </a>
+    <a href="index.html" class="brand"><span class="brand-mark">DS</span>Devdut Sharma</a>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#skills">Skills</a></li>
-      <li><a href="index.html#education">Education</a></li>
       <li><a href="projects.html" class="active">Projects</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
     </ul>
-    <div class="theme-toggle" role="group" aria-label="Theme">
-      <button class="theme-btn" data-theme-choice="light" aria-label="Light theme" title="Light">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-      </button>
-      <button class="theme-btn" data-theme-choice="dark" aria-label="Dark theme" title="Dark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
-      </button>
-      <button class="theme-btn" data-theme-choice="system" aria-label="System theme" title="System">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
-      </button>
+    <div class="theme-toggle" role="group">
+      <button class="theme-btn" data-theme-choice="light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></button>
+      <button class="theme-btn" data-theme-choice="dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg></button>
+      <button class="theme-btn" data-theme-choice="system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></button>
     </div>
-    <div class="auth-area" id="authArea">
-      <a href="login.html" class="btn-login">Login</a>
-    </div>
-    <button class="nav-cta" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-    </button>
+    <div class="auth-area" id="authArea"><a href="login.html" class="btn-login">Login</a></div>
   </nav>
 </header>
 
 <section class="page-hero">
   <div class="wrap">
     <span class="eyebrow"><span class="dot"></span>Selected Work</span>
-    <h1>Projects I've <span>built &amp; trained</span></h1>
-    <p class="page-desc">A running collection of machine learning models, tools, and web apps. New projects get added by editing <code>projects.json</code> and pushing to GitHub — no database required.</p>
+    <h1>Projects I've <span>built & trained</span></h1>
+    <p class="page-desc">A live collection of machine learning models, tools, and web apps. Pulled directly from the Firestore database.</p>
 
-    <div class="filter-row" id="filterRow">
-      <!-- filter chips injected by JS -->
+    <div id="adminPanel" class="admin-panel hidden">
+      <h2>⚠️ Admin Zone: Add Project</h2>
+      <form id="projectForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Project Title</label>
+            <input type="text" id="p_title" class="form-input" required placeholder="e.g. Anime Engine">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="p_category" class="form-input" required placeholder="e.g. Machine Learning">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-label">Description</label>
+            <textarea id="p_desc" class="form-input" required rows="3" placeholder="What does this project do?"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tags (comma separated)</label>
+            <input type="text" id="p_tags" class="form-input" required placeholder="Python, PyTorch, React">
+          </div>
+          <div class="form-group">
+            <label class="form-label">GitHub URL</label>
+            <input type="url" id="p_github" class="form-input" placeholder="https://github.com/...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Live Demo URL (Optional)</label>
+            <input type="url" id="p_demo" class="form-input" placeholder="https://...">
+          </div>
+          <div class="form-group full-width">
+            <label class="form-checkbox">
+              <input type="checkbox" id="p_featured"> Mark as Featured
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit" id="submitBtn">Publish to Database</button>
+        <div id="adminStatus" class="admin-msg"></div>
+      </form>
     </div>
+
+    <div class="filter-row" id="filterRow"></div>
 
     <div class="projects-grid" id="projectsGrid">
-      <!-- project cards injected by JS -->
+      <div class="empty-state">Loading neural networks...</div>
     </div>
 
-    <div class="howto">
-      <h2>How to add a new project</h2>
-      <p>Open <strong>projects.json</strong> in this folder and add a new object to the array, then commit &amp; push. This page picks it up automatically — no code changes needed.</p>
-      <div class="code-block">{
-  "title": "Your Project Name",
-  "category": "Machine Learning",
-  "description": "One or two sentences about what it does.",
-  "tags": ["Python", "PyTorch"],
-  "github": "https://github.com/your-username/repo-name",
-  "demo": "https://your-live-demo-link.com",
-  "featured": false
-}</div>
-    </div>
   </div>
 </section>
 
-<footer>© <span id="year"></span> Devdut Sharma — built with soft shadows &amp; neural nets.</footer>
+<footer>© <span id="year"></span> Devdut Sharma — built with soft shadows & neural nets.</footer>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
   const firebaseConfig = {
     apiKey: "AIzaSyCSy39eeFdJONcPSFJ76BJaciS1l6ESvTE",
     authDomain: "zynexalpha.firebaseapp.com",
     projectId: "zynexalpha",
     storageBucket: "zynexalpha.firebasestorage.app",
     messagingSenderId: "780065160785",
-    appId: "1:780065160785:web:b168affe481f55d7154270",
-    measurementId: "G-H70X75N1RF"
+    appId: "1:780065160785:web:b168affe481f55d7154270"
   };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // --- STATE VARIABLES ---
   const authArea = document.getElementById('authArea');
-
-  function initials(name){
-    return name ? name.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase() : '?';
-  }
-
-  auth.onAuthStateChanged(user => {
-    if (user){
-      const name = user.displayName || user.email || 'Account';
-      authArea.innerHTML = `
-        <div class="user-chip">
-          <div class="user-avatar">${initials(user.displayName || user.email)}</div>
-          <span class="user-name">${name}</span>
-          <button class="logout-btn" id="logoutBtn" aria-label="Log out" title="Log out">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          </button>
-        </div>`;
-      document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
-    } else {
-      authArea.innerHTML = `<a href="login.html" class="btn-login">Login</a>`;
-    }
-  });
-</script>
-
-<script>
-  // ===== Theme system =====
-  const themeButtons = document.querySelectorAll('.theme-btn');
-  let currentPref = localStorage.getItem('theme') || 'system';
-
-  function getSystemPref(){
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  function updateToggleUI(pref){
-    themeButtons.forEach(b => b.classList.toggle('active', b.dataset.themeChoice === pref));
-  }
-  function applyTheme(pref, save = true){
-    const effective = pref === 'system' ? getSystemPref() : pref;
-    document.documentElement.setAttribute('data-theme', effective);
-    if (save) localStorage.setItem('theme', pref);
-    updateToggleUI(pref);
-  }
-
-  applyTheme(currentPref, false);
-  themeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      currentPref = btn.dataset.themeChoice;
-      applyTheme(currentPref);
-    });
-  });
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (currentPref === 'system') applyTheme('system', false);
-  });
-
-  // ===== Ambient particle field (black dots in light theme, white in dark) =====
-  (function(){
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let w, h, particles;
-
-    function resize(){
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    function initParticles(){
-      const count = Math.min(70, Math.floor((w * h) / 26000));
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.4 + 1
-      }));
-    }
-    function dotColor(){
-      return document.documentElement.getAttribute('data-theme') === 'dark' ? '255,255,255' : '10,10,14';
-    }
-    function frame(){
-      ctx.clearRect(0, 0, w, h);
-      const rgb = dotColor();
-      particles.forEach(p => {
-        if (!reduceMotion){
-          p.x += p.vx; p.y += p.vy;
-          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-        }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb},0.42)`;
-        ctx.fill();
-      });
-      for (let i = 0; i < particles.length; i++){
-        for (let j = i + 1; j < particles.length; j++){
-          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 110){
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(${rgb},${0.12 * (1 - dist / 110)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      if (!reduceMotion) requestAnimationFrame(frame);
-    }
-
-    resize();
-    initParticles();
-    frame();
-    window.addEventListener('resize', () => { resize(); initParticles(); if (reduceMotion) frame(); });
-  })();
-
-  // ===== Mobile nav toggle =====
-  const menuToggle = document.getElementById('menuToggle');
-  const navLinks = document.getElementById('navLinks');
-  menuToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', isOpen);
-  });
-
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // ===== Load projects from projects.json =====
+  const adminPanel = document.getElementById('adminPanel');
   const grid = document.getElementById('projectsGrid');
   const filterRow = document.getElementById('filterRow');
   let allProjects = [];
   let activeFilter = 'All';
 
+  // --- AUTHENTICATION & ADMIN LOGIC ---
+  function initials(name){
+    return name ? name.trim().split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase() : '?';
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user){
+      const name = user.displayName || user.email || 'Account';
+      authArea.innerHTML = `
+        <div class="user-chip">
+          <div class="user-avatar">${initials(name)}</div>
+          <span class="user-name">${name}</span>
+          <button class="logout-btn" id="logoutBtn" aria-label="Log out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+        </div>`;
+      document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+      // Reveal Admin Panel for specific email
+      if(user.email === 'devdutts178@gmail.com') {
+        adminPanel.classList.remove('hidden');
+      } else {
+        adminPanel.classList.add('hidden');
+      }
+    } else {
+      authArea.innerHTML = `<a href="login.html" class="btn-login">Login</a>`;
+      adminPanel.classList.add('hidden');
+    }
+  });
+
+  // --- FIRESTORE DATABASE LOGIC ---
+  async function fetchProjects() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "projects"));
+      allProjects = [];
+      querySnapshot.forEach((doc) => {
+        allProjects.push({ id: doc.id, ...doc.data() });
+      });
+      
+      // Setup UI
+      const categories = ['All', ...new Set(allProjects.map(p => p.category).filter(Boolean))];
+      renderChips(categories);
+      renderProjects();
+    } catch (error) {
+      console.error("Error fetching projects: ", error);
+      grid.innerHTML = `<div class="empty-state">Couldn't load projects: ${error.message} (Check Firestore Rules)</div>`;
+    }
+  }
+
+  // Handle Admin Form Submission
+  document.getElementById('projectForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('adminStatus');
+    
+    btn.innerText = "Publishing...";
+    btn.disabled = true;
+
+    // Process Tags
+    const tagsRaw = document.getElementById('p_tags').value;
+    const tagsArray = tagsRaw.split(',').map(tag => tag.trim()).filter(tag => tag !== "");
+
+    const newProject = {
+      title: document.getElementById('p_title').value,
+      category: document.getElementById('p_category').value,
+      description: document.getElementById('p_desc').value,
+      tags: tagsArray,
+      github: document.getElementById('p_github').value || null,
+      demo: document.getElementById('p_demo').value || null,
+      featured: document.getElementById('p_featured').checked,
+      createdAt: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, "projects"), newProject);
+      status.style.color = "var(--accent-1)";
+      status.innerText = "Project successfully added to Firestore!";
+      document.getElementById('projectForm').reset();
+      fetchProjects(); // Reload grid
+    } catch (error) {
+      console.error("Error adding project:", error);
+      status.style.color = "red";
+      status.innerText = `Error: ${error.message}`;
+    } finally {
+      btn.innerText = "Publish to Database";
+      btn.disabled = false;
+    }
+  });
+
+  // --- UI RENDERING LOGIC ---
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
   }
@@ -404,12 +411,9 @@
   }
 
   function renderProjects(){
-    const filtered = activeFilter === 'All'
-      ? allProjects
-      : allProjects.filter(p => p.category === activeFilter);
-
+    const filtered = activeFilter === 'All' ? allProjects : allProjects.filter(p => p.category === activeFilter);
     if (filtered.length === 0){
-      grid.innerHTML = '<div class="empty-state">No projects in this category yet — add one to projects.json.</div>';
+      grid.innerHTML = '<div class="empty-state">No projects found. Database is empty.</div>';
       return;
     }
 
@@ -425,8 +429,8 @@
           ${(p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
         </div>
         <div class="link-row">
-          <a class="link-btn ${p.github ? '' : 'disabled'}" href="${p.github || '#'}" target="_blank" rel="noopener">Code</a>
-          <a class="link-btn ${p.demo ? '' : 'disabled'}" href="${p.demo || '#'}" target="_blank" rel="noopener">Live Demo</a>
+          <a class="link-btn ${p.github ? '' : 'disabled'}" href="${p.github || '#'}" target="_blank">Code</a>
+          <a class="link-btn ${p.demo ? '' : 'disabled'}" href="${p.demo || '#'}" target="_blank">Live Demo</a>
         </div>
       </article>
     `).join('');
@@ -438,23 +442,71 @@
     });
   }
 
-  fetch('projects.json')
-    .then(res => {
-      if (!res.ok) throw new Error('projects.json not found');
-      return res.json();
-    })
-    .then(data => {
-      allProjects = data;
-      const categories = ['All', ...new Set(data.map(p => p.category).filter(Boolean))];
-      renderChips(categories);
-      renderProjects();
-    })
-    .catch(() => {
-      grid.innerHTML = `<div class="empty-state">
-        Couldn't load projects.json. If you're opening this file directly (file://) some browsers block local fetches —
-        run it through a local server (e.g. VS Code's "Live Server") or view it on GitHub Pages once deployed.
-      </div>`;
-    });
+  // Initialize Data Fetch
+  fetchProjects();
+</script>
+
+<script>
+  // ===== THEME & CANVAS LOGIC (UNCHANGED) =====
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const themeButtons = document.querySelectorAll('.theme-btn');
+  let currentPref = localStorage.getItem('theme') || 'system';
+  function getSystemPref(){ return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function updateToggleUI(pref){ themeButtons.forEach(b => b.classList.toggle('active', b.dataset.themeChoice === pref)); }
+  function applyTheme(pref, save = true){
+    const effective = pref === 'system' ? getSystemPref() : pref;
+    document.documentElement.setAttribute('data-theme', effective);
+    if (save) localStorage.setItem('theme', pref);
+    updateToggleUI(pref);
+  }
+  applyTheme(currentPref, false);
+  themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => { currentPref = btn.dataset.themeChoice; applyTheme(currentPref); });
+  });
+
+  (function(){
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let w, h, particles;
+    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    function initParticles(){
+      const count = Math.min(70, Math.floor((w * h) / 26000));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22,
+        r: Math.random() * 1.4 + 1
+      }));
+    }
+    function dotColor(){ return document.documentElement.getAttribute('data-theme') === 'dark' ? '255,255,255' : '10,10,14'; }
+    function frame(){
+      ctx.clearRect(0, 0, w, h);
+      const rgb = dotColor();
+      particles.forEach(p => {
+        if (!reduceMotion){
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        }
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb},0.42)`; ctx.fill();
+      });
+      for (let i = 0; i < particles.length; i++){
+        for (let j = i + 1; j < particles.length; j++){
+          const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110){
+            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(${rgb},${0.12 * (1 - dist / 110)})`;
+            ctx.lineWidth = 1; ctx.stroke();
+          }
+        }
+      }
+      if (!reduceMotion) requestAnimationFrame(frame);
+    }
+    resize(); initParticles(); frame();
+    window.addEventListener('resize', () => { resize(); initParticles(); if (reduceMotion) frame(); });
+  })();
 </script>
 </body>
 </html>
